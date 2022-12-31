@@ -7,20 +7,10 @@ async function main() {
   await singleSwapToken.deployed(); 
   console.log(`SingleSwapToken deployed to ${singleSwapToken.address}`); //
 
-  const SwapMultiHop = await ethers.getContractFactory("SwapMultiHop");
-  const swapMultiHop = await SwapMultiHop.deploy();
-  await swapMultiHop.deployed();
-  console.log(`SwapMultiHop deployed to ${swapMultiHop.address}`); //
-
-  const Trash = await ethers.getContractFactory("ERC20");
-  const trash = await Trash.deploy("TRASH", "RAC");
-  await trash.deployed();
-  console.log(`Trash deployed to ${trash.address}`); //
-
-  const Dabloon = await ethers.getContractFactory("ERC20");
-  const dabloon = await Dabloon.deploy("Dabloon", "DUB");
-  await dabloon.deployed();
-  console.log(`Dabloon deployed to ${dabloon.address}`); //
+  // const SwapMultiHop = await ethers.getContractFactory("SwapMultiHop");
+  // const swapMultiHop = await SwapMultiHop.deploy();
+  // await swapMultiHop.deployed();
+  // console.log(`SwapMultiHop deployed to ${swapMultiHop.address}`); //
 }
 
 main().catch((error) => {

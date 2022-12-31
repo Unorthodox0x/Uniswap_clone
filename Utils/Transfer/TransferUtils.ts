@@ -1,7 +1,8 @@
+import {Contract, BigNumber} from "ethers";
 import {checkWalletConnected} from "../Wallet/WalletUtils";
 //NOT_TESTED================================================
 //Deposit tokens in contract before SWAP || LIQUIDITY
-export const fundContract = async(tokenContract, recipientAddress:string, tokenType:string, value:number) => {	
+export const fundContract = async(tokenContract:Contract, recipientAddress:string, tokenType:string, value:BigNumber) => {	
 	switch(tokenType){
 		case "ETH":
 		case "IWETH":
@@ -21,7 +22,7 @@ export const fundContract = async(tokenContract, recipientAddress:string, tokenT
  * @params {recipientAddress} | Contract to access User's Eth [Swap|Liquidity]
  * @params {value} amount of Eth to deposit
  */
-async function depositETH (tokenContract, recipientAddress:string, value:number){
+async function depositETH (tokenContract:Contract, recipientAddress:string, value:BigNumber){
 	//deposit token to TOKENX contract,
     await tokenContract.deposit({ value });
     //approve singleSwapToken for deposited amount
@@ -32,7 +33,7 @@ async function depositETH (tokenContract, recipientAddress:string, value:number)
  * DEPOSIT TOKEN IN CONTRACT FOR USE
  * @params {tokenContract} | ERC20 contract instance
  */
-async function depositERC20(tokenContract, recipientAddress:string, value:number) {
+async function depositERC20(tokenContract:Contract, recipientAddress:string, value:BigNumber) {
 	const account:string = await checkWalletConnected();
     return await tokenContract.connect(account).transfer(recipientAddress, value) //transfers to this contract
 } //transfer from connected account to recipientAddress

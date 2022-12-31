@@ -1,11 +1,12 @@
-import { ethers, BigNumber } from "ethers";
+import { ethers, BigNumber, Contract } from "ethers";
 //Internal
 import { tokenList } from "../Constants/AvailableTokens";
 //Smart Contract
 import {ERC20ABI, IWETHABI} from "../Constants/ContractInfo";
-import {getContractAddressByNetwork, connectContract} from "../Contracts/ContractUtils";
+import {getContractAddressByNetwork, connectContractUser} from "../Contracts/ContractUtils";
+
 //Types
-import { Token } from "../../Models/index";
+import { IToken } from "../../Models/index";
 
 /**
  * @parmas {provider} | object??
@@ -13,24 +14,25 @@ import { Token } from "../../Models/index";
  * @params {tokenData} | useState<Token[]>
  */
 //GET USERS BALANCE OF ALL SUPPORTED TOKENS 
-export const getTokenBalance = async(
+export const getUserTokenBalance = async(
 	provider: ethers.providers.Web3Provider,
 	account:string, //Connected Address
 	network:string, //Connected Network Name
-	tokenData:Token[]
+	tokenData:IToken[]
 ):Promise<void> => {	
 	//GET TOKEN BALANCES
-	tokenList.map(async(el:Token) => {
+	tokenList.map(async(el:IToken) => {
 		//Get contract, 
 		const contractAddress = await getContractAddressByNetwork(el.Network, network);
 		if(!contractAddress) return;
-		const contract = await connectContract(
-			contractAddress,
-			el.type==="ERC20"? ERC20ABI: IWETHABI,	
+		const tokenContract:Contract|null = await connectContractUser(
+			contractAddress, 
+			el.type==="ERC20"? ERC20ABI: IWETHABI
 		);
+		if(!tokenContract) return null;;
 
 		//return human readable balance for each token
-		const tokenValue:number = await convertTokenBalance(account, provider, network, contract, el.symbol, el.type);
+		const tokenValue:number = await convertTokenBalance(account, provider, network, tokenContract, el.symbol, el.type);
 
 		//CREATE LIST TOKENDATA | prevent duplicate add token
 		if(!tokenData.some(el => el.Network[0].Address === contractAddress)){
@@ -40,7 +42,7 @@ export const getTokenBalance = async(
 				type: el.type,
 				img: el.img,
 				Network:[{
-					name: network,
+					Name: network,
 					Address: contractAddress,
 				}],
 				balance: tokenValue
@@ -54,7 +56,7 @@ export const convertTokenBalance = async(
 	account:string, //Connected Address
 	provider:ethers.providers.Web3Provider, 
 	network:string,  //Connected Network Name
-	contract,  //Contract Instance
+	contract:Contract,
 	tokenSymbol:string, //ex. "Eth"
 	tokenType:string //"ERC20"||"IWETH"
 ):Promise<number> => {
@@ -68,7 +70,7 @@ export const convertTokenBalance = async(
 		case 'ETH': //Chain native eth token
 			balance = await provider.getBalance(account);
 			convertedBal = BigNumber.from(balance).toString();
-			tokenValue = formatEtherValue(convertedBal);
+			tokenValue = formatEtherDisplayValue(convertedBal);
 			break;
 		default:
 			//Get && Convert User Token Balance
@@ -76,23 +78,33 @@ export const convertTokenBalance = async(
 			convertedBal = BigNumber.from(balance).toString();
 			tokenValue = 
 				tokenType==="IWETH" 
-				? formatEtherValue(convertedBal)
+				? formatEtherDisplayValue(convertedBal)
 				: tokenType==="ERC20" 
-				? await formatERC20Value(contract, convertedBal)
+				? await formatERC20DisplayValue(contract, convertedBal)
 				: "0"
 			break;
 	}
 	return parseFloat(tokenValue);
 }
 
-export function formatEtherValue(value:string):string {
+export function formatEtherDisplayValue(value:string):string {
 	return parseFloat(
 		ethers.utils.formatEther(value)
 		).toFixed(6)
 }
 
-//DETERMIN NUMBER OF DECIMALS
-export async function formatERC20Value(tokenContract, value:string):Promise<string> {
+//DISPLAY TOKENS IN UX
+export async function formatERC20DisplayValue(tokenContract:Contract, value:string):Promise<string> {
 	const decimals = await tokenContract.decimals();
 	return (parseFloat(value) / 10 ** decimals).toFixed(6)
+}
+
+export async function formatNumberToBig(tokenContract:Contract, value:number):Promise<BigNumber> {
+	const decimals = await tokenContract.decimals();
+	return ethers.utils.parseUnits(value.toString(), decimals);
+}
+
+export async function formatBigToString(tokenContract:Contract, value:BigNumber):Promise<string>{
+	const decimals = await tokenContract.decimals();
+	return ethers.utils.formatUnits(value, decimals);
 }

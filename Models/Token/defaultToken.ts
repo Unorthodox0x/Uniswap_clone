@@ -1,16 +1,17 @@
-import {Token} from "./Token";
+import {IToken} from "./Token";
 import images from "../../Assets/index"
 /**
  * This servers as a base model
  *  to describe/display a token in app
  */
-export const defaultToken:Token = {
-  name:"Ether",
-  symbol: "Eth",
-  type:"ETH",
-  img: images.Eth,
+export const defaultToken:IToken = {
+  name:"",
+  symbol: "",
+  type: "",
+  img: "",
   Network:[{
     name:"",
+    Abi:"",
     Address:""
   }],
   balance:0

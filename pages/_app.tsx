@@ -1,4 +1,4 @@
-import '../styles/globals.css'
+import '../styles/globals.scss'
 import type { AppProps } from 'next/app'
 import {NavBar} from "../Components/index";
 import {WalletProvider} from "../Context/WalletContext";
@@ -6,8 +6,8 @@ import {WalletProvider} from "../Context/WalletContext";
 const MyApp = ({ Component, pageProps }: AppProps) => (
   <div>
     <WalletProvider>
-      <NavBar />
-      <Component {...pageProps} />
+        <NavBar />
+        <Component {...pageProps} />
     </WalletProvider>
   </div>
 );

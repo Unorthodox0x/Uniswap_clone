@@ -2,13 +2,14 @@ import React from "react"
 import Image from "next/image";
 
 import Style from "./TokenList.module.scss";
-import images from "Assets";
+import images from "../../Assets/index";
+import {IToken} from "../../Models/index";
 
 /**
  * Navbar component displaying list of all tokens where user has some balance > 0
  * 	!!Displays supported tokens Only!! 
  */
-const TokenList = ({tokenData, setOpenTokenBox}) => {
+const TokenList = ({ tokenData, setOpenTokenBox }) => {
 
 	return (
 		<div className={Style.TokenList}>
@@ -21,7 +22,7 @@ const TokenList = ({tokenData, setOpenTokenBox}) => {
 			<div className={Style.title}> 
 				<h2>Your Token List</h2>
 			</div>
-			{tokenData.map((el,i)=> el.balance !== 0 && (
+			{tokenData.map((el:IToken,i:number)=> el.balance !== 0 && (
 				<div 
 					key={i+1}
 					className={Style.box}

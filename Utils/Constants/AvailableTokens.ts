@@ -15,16 +15,17 @@ import {
 	IWETHABI,
 	ERC20ABI,
 } from "./ContractInfo";
-import { Token } from "../../Models/Token";
+import { IToken } from "../../Models/Token/Token";
 import images from "../../Assets/index";
 
-export const tokenList:Token[] = [{
+export const tokenList:IToken[] = [{
 	name: "Trash",
 	symbol: "RAC",
 	type: "ERC20",
 	img: images.RaccoonLogo,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: ERC20ABI,
 	    Address: TrashAddress
   	}],
   	balance:0
@@ -34,7 +35,8 @@ export const tokenList:Token[] = [{
 	type: "ERC20",
 	img: images.Eth,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: ERC20ABI,
 	    Address: DabloonAddress
   	}],
   	balance:0
@@ -44,7 +46,8 @@ export const tokenList:Token[] = [{
 	type: "ETH",
 	img: images.Eth,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: IWETHABI,
 	    Address: EthAddress
   	}],
   	balance:0
@@ -54,7 +57,8 @@ export const tokenList:Token[] = [{
 	type: "ERC20",
 	img: images.Bitcoin,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: ERC20ABI,
 	    Address: WBtcAddress
   	}],
   	balance:0
@@ -64,7 +68,8 @@ export const tokenList:Token[] = [{
 	type: "ERC20",
 	img: images.Uniswap,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: ERC20ABI,
 	    Address: UniAddress
   	}],
   	balance:0
@@ -74,7 +79,8 @@ export const tokenList:Token[] = [{
 	type: "ERC20",
 	img: images.USDC,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: ERC20ABI,
 	    Address: USDCAddress
   	}],
   	balance:0
@@ -84,7 +90,8 @@ export const tokenList:Token[] = [{
 	type: "IWETH",
 	img: images.Eth,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: IWETHABI,
 	    Address: IWETHAddress
   	}],
   	balance:0
@@ -94,7 +101,8 @@ export const tokenList:Token[] = [{
 	type: "ERC20",
 	img: images.Dai,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: ERC20ABI,
 	    Address: DaiAddress
   	}],
   	balance:0
@@ -104,7 +112,8 @@ export const tokenList:Token[] = [{
 	type: "ERC20",
 	img: images.ChainLink,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: ERC20ABI,
 	    Address: ChainLinkAddress
   	}],
   	balance:0
@@ -114,7 +123,8 @@ export const tokenList:Token[] = [{
 	type: "ERC20",
 	img: images.Matic,
 	Network:[{
-	    name: "goerli",
+	    Name: "goerli",
+	    Abi: ERC20ABI,
 	    Address: MaticAddress
   	}],
   	balance:0

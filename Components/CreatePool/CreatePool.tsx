@@ -1,32 +1,28 @@
 import React, {useState, useEffect, useContext} from "react";
 import Image from "next/image";
 
+import { WalletContext } from "../../Context/WalletContext";
+import { PoolContext } from "../../Context/PoolContext";
+
 import Style from "./CreatePool.module.scss";
 import images from "../../Assets";
-import { Token, SearchToken } from "../index";
-import {defaultToken, Token as TokenModel}  from "../../Models/index";
-
-import { WalletContext } from "../../Context/WalletContext";
-
+import { SwapSettings, SearchToken } from "../index";
+import {defaultToken, IToken}  from "../../Models/index";
 
 const CreatePool = () => {
   	
   	const {account, tokenData} = useContext(WalletContext);
+  	const {tokenOne, setTokenOne, tokenTwo, setTokenTwo} = useContext(PoolContext);
 
 	//OPEN OPTIONS
 	const [openModal, setOpenModal] = useState<boolean>(false);
 	const [openTokenModal, setOpenTokenModal] = useState<boolean>(false);
-
-	//TOKEN 1
 	const [openToken, setOpenToken] = useState<boolean>(false);
-	const [tokenOne, setTokenOne] = useState<TokenModel>(defaultToken);
-	//TOKEN 2
 	const [openTokenTwo, setOpenTokenTwo] = useState<boolean>(false);
-	const [tokenTwo, setTokenTwo] = useState<TokenModel>(defaultToken);
+ 	const [openFee, setOpenFee] = useState<boolean>(false);
 
 	const [active, setActive] = useState<number>(1); //index of active pool?
  	
- 	const [openFee, setOpenFee] = useState<boolean>(false);
  	const [minPrice, setMinPrice] = useState<number>(0)
  	const [maxPrice, setMaxPrice] = useState<number>(0)
  
@@ -266,7 +262,9 @@ const CreatePool = () => {
 			{/* TOKEN POPUPS */}
 			{openModal && (
 				<div className={Style.token}>
-					<Token setOpenSetting={setOpenModal}/>
+					<SwapSettings 
+						setOpenSetting={setOpenModal}
+					/>
 				</div>
 			)}
 

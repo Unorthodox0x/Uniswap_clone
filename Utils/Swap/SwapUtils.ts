@@ -1,9 +1,9 @@
-import { ethers, BigNumber } from "ethers";
+import { ethers, BigNumber, Contract } from "ethers";
 import { getNetwork } from "../Wallet/WalletUtils";
 import {
 	getContractAddressByNetwork, 
 	createContractInstance, 
-	connectContract
+	connectContractUser
 } from "../Contracts/ContractUtils";
 import { fundContract } from "../Transfer/TransferUtils";
 import {
@@ -12,46 +12,49 @@ import {
 	singleSwapToken,
 	SingleSwapTokenABI,
 	swapMultiHop,
-	SwapMultiHopABI,
 } from "../Constants/ContractInfo";
+import {
+	formatNumberToBig
+} from "../Token/TokenUtils";
 //@Types
-import { Token } from "../../Models/index";
+import { IToken } from "../../Models/index";
 
 
-//ACTION: SWAP SINGLE TOKENX FOR TOKENY
-export const singleSwap = async (tokenX:Token, tokenY:Token, swapAmount:number) => {
+/**
+ * ACTION: SWAP SINGLE TOKENX FOR TOKENY
+ * CONNECTS ONLY TO HARD-CODED TOKEN ADDRESSES
+ */
+export const singleSwap = async (tokenX:IToken, tokenY:IToken, swapAmount:number) => {
 	if(tokenX.name==="" || tokenY.name==="" || Number.isNaN(swapAmount)) return null;
 
-	const network:string = await getNetwork();
+	const network:string|null = await getNetwork();
+	if(!network) return null;
+	
 	//CONFIRM SELECTED TOKEN CONTRACTS EXIST | CAN CONNECT
 	const tokenXAddress:string = await getContractAddressByNetwork(tokenX.Network, network);
 	const tokenYAddress:string = await getContractAddressByNetwork(tokenY.Network, network);
 	const singleSwapAddress:string = await getContractAddressByNetwork(singleSwapToken, network);
 	
 	//MAKE CONTRACT INSTANCE TO ACCESS FUNCTIONS
-	const tokenXContract = await connectContract(
-		tokenXAddress, 
-		tokenX.type==="ERC20"? ERC20ABI: IWETHABI
-	);
-	const swapContract = await connectContract(singleSwapAddress, SingleSwapTokenABI);
+	const tokenXContract:Contract|null = await connectContractUser(tokenXAddress, tokenX.Network[0].Abi);
+	const swapContract:Contract|null = await connectContractUser(singleSwapAddress, SingleSwapTokenABI);
 	if(!tokenXContract || !swapContract) return null; //could not connect
 
+	//Convert number to contract readable
+	const amountIn = await formatNumberToBig(tokenXContract, swapAmount);
+
 	//MAKE FUNDS ACCESSIBLE TO SINGLESWAP CONTRACT
-	await fundContract(tokenXContract, singleSwapAddress, tokenX.type, swapAmount)
+	await fundContract(tokenXContract, singleSwapAddress, tokenX.type, amountIn)
 
     //SWAP
 	const txn = await swapContract.swapExactInputSingle(
 		tokenXAddress, 
 		tokenYAddress, 
-		swapAmount,
+		amountIn,
 		{ gasLimit: 300000 }
 	);
-	console.log("pre - txn", txn);
 	txn.wait();
 	console.log("post - txn", txn);
-
-	//amountOut
-	// const contract = connectContract(Address, Abi);	
 }
 
 //==================SwapMultiHop==========================

@@ -8,7 +8,7 @@ import {
 	web3ModalProvider
 } from "../Utils/Wallet/WalletUtils";
 import {
-	getTokenBalance,
+	getUserTokenBalance,
 	convertTokenBalance
 } from "../Utils/Token/TokenUtils";
 import {
@@ -16,14 +16,16 @@ import {
 } from "../Utils/Contracts/ContractUtils";
 
 //@Types
-import { defaultToken, Token}  from "../Models/index";
+import { 
+	defaultToken, IToken, 
+	defaultWalletContext, IWalletContext 
+}  from "../Models/index";
 
-// import {Token, defaultToken} from "../Models/Token"
 /**
  * This goal of object serves as a global state manager 
  *     for a singed in user
  */
-export const WalletContext = createContext({});
+export const WalletContext = createContext<IWalletContext>(defaultWalletContext);
 
 export const WalletProvider = ({ children }) => {
 	if(!children) return null;
@@ -31,8 +33,8 @@ export const WalletProvider = ({ children }) => {
 	//STATE
 	const [provider, setProvider] = useState<ethers.providers.Web3Provider|null>(null); 
 	const [account, setAccount] = useState<string>(""); //address
-	const [userNetwork, setUserNetwork] = useState<string>(""); //name
-	const [tokenData, setTokenData] = useState<Token[]>([defaultToken]);
+	const [userNetwork, setUserNetwork] = useState<string|null>(""); //name
+	const [tokenData, setTokenData] = useState<IToken[]>([defaultToken]);
 
 	//REQUEST CONNECT WALLET 
 	const connectWallet = async():Promise<void> => {
@@ -59,7 +61,7 @@ export const WalletProvider = ({ children }) => {
 	useEffect(()=> {
 		if(!!account && !!userNetwork && !!provider){
 			// POPULATE UX WITH USER'S TOKEN INFO
-			getTokenBalance(provider, account, userNetwork, tokenData);
+			getUserTokenBalance(provider, account, userNetwork, tokenData);
 		}
 	},[account, userNetwork, provider])
 

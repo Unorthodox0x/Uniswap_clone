@@ -47,6 +47,7 @@ const SearchToken = ({ setOpenToken, setToken, tokenData }) => {
 									img: el.img,
 									Network:[{
 									  name: el.Network[0].name,
+									  Abi: el.Network[0].Abi, 
 									  Address: el.Network[0].Address
 									}],
 									balance: el.balance,

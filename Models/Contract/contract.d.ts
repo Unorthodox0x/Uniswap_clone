@@ -1,4 +1,7 @@
+import {ContractInterface} from "ethers";
+
 export declare type Contract_Network_Info = {
-  name: string,
+  Name: string,
+  ChainId: string,
   Address: string
 }

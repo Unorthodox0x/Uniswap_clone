@@ -67,7 +67,7 @@ const NavBar = () => {
 						<div className={Style.img}>
 							<Image src={images.Eth} alt="Network" height={25} width={25} />
 						</div>
-						<p> {userNetwork} </p>
+						<p> {userNetwork.name} </p>
 					</div>
 					
 

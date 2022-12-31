@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react"
 import Image from "next/image";
 
-import Style from "./Token.module.scss";
+import Style from "./SwapSettings.module.scss";
 import images from "Assets";
 import { Toggle } from "../index";
 
-const Token = ({ setOpenSetting }) => {
+const SwapSettings = ({ setOpenSetting }) => {
 
 	return (
-		<div className={Style.Token}>
+		<div className={Style.SwapSettings}>
 			<div className={Style.box}>
 				
 				{/* Close */}
@@ -73,4 +73,4 @@ const Token = ({ setOpenSetting }) => {
 	)
 }
 
-export default Token;
+export default SwapSettings;

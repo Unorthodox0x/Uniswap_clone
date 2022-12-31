@@ -1,37 +1,28 @@
 import React, {useState, useEffect, useContext} from "react";
 import { WalletContext } from "../../Context/WalletContext";
+import { SwapContext } from "../../Context/SwapContext";
 import Image from "next/image";
 
 import Style from "./MainSection.module.scss"
 import images from "../../Assets";
-import {Token, SearchToken } from "../index"
-import {defaultToken, Token as TokenModel, MainProps}  from "../../Models/index";
+import {SwapSettings, SearchToken } from "../index"
+import {defaultToken, IToken}  from "../../Models/index";
 
-//ACTIONS
-import { singleSwap } from "../../Utils/Contracts/Swap";
-import { fetchQuote } from "../../Utils/Price/PriceUtils";
+const MainSection = () => {
 
-const MainSection = ({ account, tokenData }:MainProps) => {
-
-	//Global context
-	const {connectWallet} = useContext(WalletContext);
+	//Global contexts
+	const {connectWallet, account, tokenData} = useContext(WalletContext);
+	const {
+		tokenOne, setTokenOne, tokenTwo, setTokenTwo,
+		slippageTolerance, setSlippageTolerance, deadline, setDeadline,
+		expectedOutput, swapAmount, setSwapAmount,
+		getQuote, getPoolPrice, singleSwap,
+	} = useContext(SwapContext);
+	
 	//states
 	const [openSetting, setOpenSetting] = useState<boolean>(false);
 	const [openToken, setOpenToken] = useState<boolean>(false);
 	const [openTokenTwo, setOpenTokenTwo] = useState<boolean>(false);
-	const [swapAmount, setSwapAmount] = useState<number>(0)
-	const [expectedOutput, setExpectedOutput] = useState<string>("");
-	//TOKEN 1
-	const [tokenOne, setTokenOne] = useState<TokenModel>(defaultToken);
-	//TOKEN 2
-	const [tokenTwo, setTokenTwo] = useState<TokenModel>(defaultToken);
-
-	const getQuote = async():Promise<void> => {
-		//TODO: useQuery;
-		const quote = await fetchQuote(tokenOne, tokenTwo, Number(swapAmount))
-		if(!quote) return setExpectedOutput("0")
-		setExpectedOutput(quote.toString());
-	}
 
 	return (
 		<div className={Style.MainSection}>
@@ -125,7 +116,7 @@ const MainSection = ({ account, tokenData }:MainProps) => {
 			</div>
 
 			{openSetting && (
-				<Token
+				<SwapSettings
 					setOpenSetting={setOpenSetting}
 				/>
 			)}

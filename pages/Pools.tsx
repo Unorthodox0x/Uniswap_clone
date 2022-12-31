@@ -4,14 +4,17 @@ import Image from "next/image";
 import Style from "../styles/PoolPage.module.scss";
 import image from "../Assets";
 import {CreatePool, ConnectPool} from "../Components/index";
+import {PoolContextProvider} from "../Context/PoolContext";
 
 const PoolPage = () => {
 
 	return (
-		<div className={Style.PoolPage}>
-			<CreatePool />
-			<ConnectPool />
-		</div>
+		<PoolContextProvider>
+			<div className={Style.PoolPage}>
+				<CreatePool />
+				<ConnectPool />
+			</div>
+		</PoolContextProvider>
 	);
 }
 
