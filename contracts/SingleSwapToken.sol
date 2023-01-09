@@ -10,15 +10,12 @@ contract SingleSwapToken{
 	//Uniswap ISwapRouter contract
 	ISwapRouter public immutable swapRouter = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
-	uint24 public poolFee = 3000; //0.3%
-	function setPoolFee(uint24 _fee) external {
-		poolFee = _fee;
-	}
-
+    ///IN ORDER TO MAKE A SWAPTHIS FUNCTION WILL NEED TO BE ABLE TO ??
+    ///QUERY A POOL'S ADDRESS AND IMMUTABLES to get the tokens in a pool??
 	function swapExactInputSingle(address tokenX, address tokenY, uint256 amountIn) external returns (uint256 amountOut) {
-        // Transfer the specified amount to this contract
+        // Transfer the specified amount From sender to this contract
         TransferHelper.safeTransferFrom(tokenX, msg.sender, address(this), amountIn);
-        // Approve the router to spend
+        // Approve the router to spend token
         TransferHelper.safeApprove(tokenX, address(swapRouter), amountIn);
 
         // Naively set amountOutMinimum to 0. In production, use an oracle or other data source to choose a safer value for amountOutMinimum.
@@ -27,7 +24,7 @@ contract SingleSwapToken{
             ISwapRouter.ExactInputSingleParams({
                 tokenIn: tokenX,
                 tokenOut: tokenY,
-                fee: poolFee,
+                fee: 3000, //TODO: MAKE DYNAMIC
                 recipient: msg.sender,
                 deadline: block.timestamp,
                 amountIn: amountIn,
@@ -38,4 +35,31 @@ contract SingleSwapToken{
         // The call to `exactInputSingle` executes the swap.
         amountOut = swapRouter.exactInputSingle(params);
 	}
+
+    function swapExactOutputSingle(address tokenX, address tokenY, uint256 amountOut, uint amountInMaximum) external returns (uint256 amountIn) {
+        // Transfer the specified amount to this contract
+        TransferHelper.safeTransferFrom(tokenX, msg.sender, address(this), amountInMaximum);
+        // Approve the router to spend
+        TransferHelper.safeApprove(tokenX, address(this), amountInMaximum);
+
+        ISwapRouter.ExactOutputSingleParams memory params =
+            ISwapRouter.ExactOutputSingleParams({
+                tokenIn: tokenX,
+                tokenOut: tokenY,
+                fee: 3000, //TODO: MAKE DYNAMIC
+                recipient: msg.sender,
+                deadline: block.timestamp,
+                amountOut: amountOut,
+                amountInMaximum: amountInMaximum,
+                sqrtPriceLimitX96: 0
+            });
+
+        // The call to `exactInputSingle` executes the swap.
+        amountIn = swapRouter.exactOutputSingle(params);
+
+        if(amountIn < amountInMaximum){
+            TransferHelper.safeApprove(tokenX, address(swapRouter), 0);
+            TransferHelper.safeTransfer(tokenX, msg.sender, amountInMaximum - amountIn);
+        }
+    }
 }

@@ -28,17 +28,17 @@ export async function deployPool(tokenX:Token, tokenY:Token, fee:number, tokenXP
 
   //GET USER PROVIDER, NETWORK, SIGNER
   const provider = defaultProvider();
+  const signer = provider ? provider.getSigner():null;
   const network = await getNetwork();
-  if(!network || !provider) return null;
-  const signer = provider.getSigner();
+  if(!network || !provider || !signer) return null;
 
   //CONFIRM SELECTED TOKEN CONTRACTS EXIST | CAN CONNECT
   const PositionManagerAddress:string =await getContractAddressByNetwork(PositionManager, network.name);
   const FactoryAddress:string = await getContractAddressByNetwork(uniswapv3Factory, network.name);
   //MAKE CONTRACT INSTANCE TO ACCESS FUNCTIONS
-  const PositionManagerContract:Contract|null = await connectContractUser(PositionManagerAddress, PositionManagerAbi);
   const FactoryContract:Contract|null = await connectContractUser(FactoryAddress, Uniswapv3FactoryAbi);
-  if(!PositionManagerContract || !FactoryContract) return null; //could not connect
+  const PositionManagerContract:Contract|null = await connectContractUser(PositionManagerAddress, PositionManagerAbi);
+  if(!PositionManagerContract || !FactoryContract) return null; 
 
   //NEED A WAY TO DYNAMICALLY GET PRICE
   const price = encodePriceSqrt(tokenXPrice, tokenYPrice)
@@ -61,8 +61,33 @@ export async function makeUniPool(immutables:Immutables, state:State, poolTokens
   const {sqrtPriceX96, liquidity, tick} = state;
   const {TOKENX, TOKENY} = poolTokens;
   return new Pool(TOKENX, TOKENY, fee, sqrtPriceX96.toString(), liquidity.toString(), tick);
+}
+  
+export async function getUserLiquidity() {
 
 }
+
+export async function getPools() {
+  //GET USER PROVIDER, NETWORK, SIGNER
+  const provider = defaultProvider();
+  const signer = provider ? provider.getSigner():null;
+  const network = await getNetwork();
+  if(!network || !provider || !signer) return null;
+
+  //CONFIRM SELECTED TOKEN CONTRACTS EXIST | CAN CONNECT
+  const PositionManagerAddress:string =await getContractAddressByNetwork(PositionManager, network.name);
+  const FactoryAddress:string = await getContractAddressByNetwork(uniswapv3Factory, network.name);
+  //MAKE CONTRACT INSTANCE TO ACCESS FUNCTIONS
+  const FactoryContract:Contract|null = await connectContractUser(FactoryAddress, Uniswapv3FactoryAbi);
+  const PositionManagerContract:Contract|null = await connectContractUser(PositionManagerAddress, PositionManagerAbi);
+  if(!PositionManagerContract || !FactoryContract) return null; 
+
+  console.log('FactoryContract', FactoryContract)
+  console.log('PositionManagerContract', PositionManagerContract)
+
+  return;
+}
+
 ////POOLS WILL ONLY BE ABLE TO BE CREATED USING TOKENS THAT ARE APPROVED AND ARE HARD CODED INTO THE APP
 
 /**

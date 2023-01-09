@@ -14,13 +14,13 @@ const NavBar = () => {
 	const {account, userNetwork, tokenData, connectWallet} = useContext(WalletContext);	
 	const menuItems = [{ 
 		name: "Swap",
-		link: "/"
+		link: "/swap"
 	},{ 
 		name: "Tokens",
 		link: "/"
 	},{ 
 		name: "Pools",
-		link: "/pool"
+		link: "/pools"
 	}]
 
 	const [openModal, setOpenModal] = useState(false);
@@ -32,7 +32,7 @@ const NavBar = () => {
 				<div className={Style.left}>
 					{/* Logo Image */}
 					<div className={Style.img}>
-						<Link href="/">
+						<Link href="/swap">
 							<Image src={images.Uniswap} alt="logo" width={50} height={50}/>
 						</Link>
 					</div>
@@ -41,7 +41,7 @@ const NavBar = () => {
 						{menuItems.map((el, i) => (
 							<Link
 								key={i+1}
-								href={{ pathname: `${el.name}` }}
+								href={{ pathname: `${el.link}` }}
 							>
 								<p className={Style.item}>{el.name}</p>
 							</Link>
@@ -67,7 +67,7 @@ const NavBar = () => {
 						<div className={Style.img}>
 							<Image src={images.Eth} alt="Network" height={25} width={25} />
 						</div>
-						<p> {userNetwork.name} </p>
+						<p> {!!userNetwork ? userNetwork.name: "Connect"} </p>
 					</div>
 					
 
@@ -82,7 +82,7 @@ const NavBar = () => {
 					{openModal && (
 						<Popup
 				            open={openModal}
-				            className={Style.Popup.WalletConnect}
+				            className={Style.Wallet_Connect_Popup}
 				            closeOnEscape={true}
 				            onClose={() => setOpenModal(false)}
 				          >
@@ -97,7 +97,7 @@ const NavBar = () => {
 					{openTokenBox && (
 						<Popup
 				            open={openTokenBox}
-				            className={Style.Popup.TokenList}
+				            className={Style.Token_List_Popup}
 				            closeOnEscape={true}
 				            onClose={() => setOpenTokenBox(false)}
 				          >

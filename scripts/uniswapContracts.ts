@@ -24,18 +24,11 @@ import {
 	PositionManager,
 } from "../Utils/Constants/ContractInfo";
 
-//IMPORTED AFTER ALL CONTRACTS DEPLOYED
-const customWethAddress=customWeth[0].Address;
-const uniswapv3FactoryAddress=uniswapv3Factory[0].Address;
-const swapRouterAddress=swapRouter[0].Address;
-const NFTdescriptorAddress=NFTdescriptor[0].Address;
-
 //GET BYTECODE of SMART CONTRACT to deploy own instance
-const linkLibraries = (
-  {
+const linkLibraries = ({
     bytecode,
     linkReferences,
-  }: {
+	}: {
     bytecode: string
     linkReferences: {
       [fileName: string]: {
@@ -81,8 +74,8 @@ async function main() {
 		// console.log(`weth Address=`, `${weth.address}`)
 
 		// //MAIN POOL FACTORY CONTRACT
-  	// const Uniswapv3Factory = new ContractFactory(Uniswapv3FactoryAbi, Uniswapv3FactoryBytes, owner);
-  	// const factory = await Uniswapv3Factory.deploy();
+  	// const Factory = new ContractFactory(Uniswapv3FactoryAbi, Uniswapv3FactoryBytes, owner);
+  	// const factory = await Factory.deploy();
  		// await factory.deployed(); 
 		// console.log(`factory Address=`, `${factory.address}`)
 
@@ -96,7 +89,7 @@ async function main() {
 		// await nftdescriptor.deployed(); 
 		// console.log(`nftdescriptor Address=`, `${nftdescriptor.address}`)
 
-    //GET BYTE CODE REQUIRED SINCE NonFungibleTokenPositionDescriptorBytes DOES NOT WORK
+		//FETCH BYTES FOR LIBRARY FOR USE IN DEPLOYMENT
     const linkedBytecode:string = linkLibraries({
     	bytecode: PositionDescriptorBytes,
     	linkReferences: {
@@ -108,25 +101,18 @@ async function main() {
     		}
     	}
     },{
-    	NFTDescriptor: NFTdescriptorAddress,
+    	NFTDescriptor: NFTdescriptor[0].Address,
     })
-		const NonFungibleTokenPositionDescriptor = new ContractFactory(
-			PositionDescriptorAbi,
-			linkedBytecode,
-			owner
-		);
-		const nonfungibleTokenPositionDescriptor = await NonFungibleTokenPositionDescriptor.deploy(customWethAddress);
+
+		const NonFungibleTokenPositionDescriptor = new ContractFactory(PositionDescriptorAbi, linkedBytecode, owner);
+		const nonfungibleTokenPositionDescriptor = await NonFungibleTokenPositionDescriptor.deploy(customWeth[0].Address);
 		await nonfungibleTokenPositionDescriptor.deployed(); 
 		console.log(`nonfungibleTokenPositionDescriptor Address=`, `${nonfungibleTokenPositionDescriptor.address}`)
 
-	  const NonFungiblePositionManager = new ContractFactory(
-	  	PositionManagerAbi,
-			PositionManagerBytes,
-			owner,
-	  );
+	  const NonFungiblePositionManager = new ContractFactory(PositionManagerAbi, PositionManagerBytes, owner);
 	  const nonfungiblePositionManager = await NonFungiblePositionManager.deploy(
-	  	uniswapv3FactoryAddress,
-	    customWethAddress,
+	  	uniswapv3Factory[0].Address,
+	    customWeth[0].Address,
 	    nonfungibleTokenPositionDescriptor.address
 	  );
 	  await nonfungiblePositionManager.deployed(); 
@@ -134,7 +120,7 @@ async function main() {
 }
 
 /*
-	npx hardhat run --network localhost scripts/uniswapContracts.ts
+	npx hardhat run --network goerli scripts/uniswapContracts.ts
 */
 
 main()

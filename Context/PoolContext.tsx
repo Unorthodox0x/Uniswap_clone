@@ -15,8 +15,9 @@ import {
 
 //@Types
 import { 
+    defaultPool, IPool,
     defaultToken, IToken,
-    defaultPool, defaultPoolContext, IPoolContext
+    defaultPoolContext, IPoolContext
 }  from "../Models/index";
 import {
     singleSwap
@@ -32,20 +33,40 @@ export const PoolContextProvider = ({ children }) => {
     if(!children) return null;
 
     //TOKEN PAIR
-    const [tokenOne, setTokenOne] = useState<IToken>(defaultToken);
-    const [tokenTwo, setTokenTwo] = useState<IToken>(defaultToken);
+    const [activePool, setActivePool] = useState<IPool>(defaultPool); //index of active pool?
+
+    const [tokenOne, setTokenOne] = useState<IToken>(defaultPool.tokenX);
+    const [tokenOneAmount, setTokenOneAmount] = useState<number>(defaultPool.tokenOneAmount);
+
+    const [tokenTwo, setTokenTwo] = useState<IToken>(defaultPool.tokenY);
+    const [tokenTwoAmount, setTokenTwoAmount] = useState<number>(defaultPool.tokenTwoAmount);
+
+    const [slippage, setSlippage] = useState<number>(defaultPool.slippage);
+    const [deadline, setDeadline] = useState<number>(defaultPool.deadline);
+    const [fee, setFee] = useState<number>(defaultPool.fee);
 
     return(
         <PoolContext.Provider
             value={{
                 tokenOne,
                 setTokenOne,
+                tokenOneAmount,
+                setTokenOneAmount,
                 tokenTwo,
-                setTokenTwo
+                setTokenTwo,
+                tokenTwoAmount,
+                setTokenTwoAmount,
+                activePool,
+                setActivePool,
+                slippage,
+                setSlippage,
+                deadline,
+                setDeadline,
+                fee,
+                setFee,
             }}
         >
             {children}
         </PoolContext.Provider>
-        )
-
+    );
 }

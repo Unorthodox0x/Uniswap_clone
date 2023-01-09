@@ -1,4 +1,4 @@
-import { ethers, Contract } from "ethers";
+import { ethers, Contract, Network } from "ethers";
 import { Token, BigintIsh } from '@uniswap/sdk-core';
 import { Pool, Position, nearestUsableTick } from '@uniswap/v3-sdk'
 import { getAbi, getContractAddressByNetwork, connectContractUser, connectContractApp} from "../Contracts/ContractUtils";
@@ -12,13 +12,13 @@ import {
   PositionManagerAbi,
   PositionManagerBytes,
   PositionManager,
+  UserStorageDataAbi,
+  UserStorageDataBytes,
+  userStorageData,
 } from "../Constants/ContractInfo";
 import { tokenList } from "../Constants/AvailableTokens";
 //@types
-import {IToken, State, Immutables} from "../../Models/index";
-
-
-// POOL_ADDRESSES = [USDT_USDC_500, USDT_USDC_3000, USDT_USDC_10000] // ,
+import {IToken, State, Immutables, ILiquidity} from "../../Models/index";
 
 /**
  * @prarams POOL_POSITION {string} | address
@@ -71,9 +71,6 @@ async function addLiquidity(poolAddress:string, positionSize:number) {
     deadline: Math.floor(Date.now() / 1000) + (60 * 1)
   }
 
-
-
-
   //TODO: DYNAMIC APPROVE AMOUNT
   //HAVE TO DETERMINE THE RATIO OF EACH COINconnectContractUser BASED ON THE AMOUNT OF TOKEN1's "positionSize" 
   const {tokenXContract, tokenYContract}= poolTokens;
@@ -87,12 +84,33 @@ async function addLiquidity(poolAddress:string, positionSize:number) {
   console.log('done')
 }
 
+export async function getUserLiquidity(
+  userNetwork:Network, 
+  liquidityData:unknown,
+): Promise<void|null> {
+  const network = await getNetwork();
+  if(!network) return null;
+
+  // const userStorageContract = await connectContractUser(userStorageData[0].Address, UserStorageDataAbi);
+  // if(!userStorageContract) return null;
+
+  // const userLiquidity = await userStorageContract.getAllTransactions()
+  // userLiquidity.map(async(el:unknown, i:number) => {
+  //   liquidityData = await checkLiquidity(
+  //     el.poolAddress
+  //   );
+  // });
+  
+  // console.log('userLiquidity', userLiquidity)
+  return;
+}
+
 export async function checkLiquidity(poolAddress:string) {
   
   const network = await getNetwork();
   if(!network) return null;
 
-  const poolContract = await connectContractApp(poolAddress, IUniswapv3PoolABI);
+  const poolContract = await connectContractUser(poolAddress, IUniswapv3PoolABI);
   if(!poolContract) return null;
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)])
   if(!immutables || !state) return null;

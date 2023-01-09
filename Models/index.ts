@@ -5,6 +5,9 @@ export type {PoolPriceQuote} from "./Price/Price";
 export type {IWalletContext} from "./Wallet/WalletContext";
 export type {ISwapContext, SwapRoute} from "./Swap/Swap";
 
+export type {ILiquidity} from "./Liquidity/Liquidity";
+export {defaultLiquidity} from "./Liquidity/defaultLiquidity";
+
 export {defaultNetwork} from "./Contract/defaultNetwork";
 export {defaultToken} from "./Token/defaultToken";
 export {defaultPool, defaultPoolContext} from "./Pool/defaultPool";

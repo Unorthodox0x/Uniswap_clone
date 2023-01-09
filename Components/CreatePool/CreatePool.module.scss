@@ -8,29 +8,17 @@
 		border-radius: .5rem;
 		padding: 1rem;
 
-		//{/*Pool SECTION HEADER*/}
-		.header {
-			display:flex;
-			align-items: center;
-			justify-content: space-between;
-		
-			.right {
-				display: flex;
-				align-items:center;
-				gap: 1rem;
-				color: $primaryYellow;
-			}
-		}
-
 		//{/* SELECT PRICE RANGE */}
 		.price {
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
 			background-color: $primaryblack;
-			padding: 1rem;
+			padding: 0rem 1rem 1rem;
 			gap: 2rem;
 
 			& h4 {
+				display:flex;
+				justify-content:center;
 				font-size: 1.2rem;
 				font-weight: 900;
 			}
@@ -144,7 +132,7 @@
 						.input {
 							background-color: $primaryYellow;
 							color: $primaryblack;
-							width: 10rem;
+							width: 10.5rem;
 							height: 5rem;
 							align-items: center;
 							padding: 0 .8rem;
@@ -258,13 +246,6 @@
 				}
 
 			}
-		}
-
-		//{/* TOKEN POPUPS */}
-		.token {
-			position: absolute;
-			top: 0rem;
-			right: 32rem;
 		}
 	}
 }

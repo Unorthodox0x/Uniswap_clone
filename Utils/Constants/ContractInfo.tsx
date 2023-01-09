@@ -3,6 +3,7 @@ import IWETH from "../../contracts/Abi/IWETH.json";
 import SingleSwapToken from "../../contracts/Abi/SingleSwapToken.json";
 import SwapMultiHop from "../../contracts/Abi/SwapMultiHop.json";
 import Liquidity from "../../contracts/Abi/Liquidity.json";
+import UserStorageData from "../../contracts/Abi/UserStorageData.json"
 
 //UNISWAP CONTRACT ABI
 import IUniswapv3Pool from "@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json";
@@ -12,7 +13,6 @@ import SwapRouter from "@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol
 import NFTDescriptor from "@uniswap/v3-periphery/artifacts/contracts/libraries/NFTDescriptor.sol/NFTDescriptor.json";
 import NonFungibleTokenPositionDescriptor from "@uniswap/v3-periphery/artifacts/contracts/NonfungibleTokenPositionDescriptor.sol/NonfungibleTokenPositionDescriptor.json";
 import NonFungiblePositionManager from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
-
 //@types
 import { Contract_Network_Info } from "../../Models/Contract/contract";
 
@@ -36,7 +36,7 @@ export const DaiAddress:string = "0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844"; /
 export const customWeth:Contract_Network_Info[] = [{
 	Name: "goerli",
 	ChainId: "5",
-	Address: "0xD78D063Fce1EC545c6dD437B17cCe08873cB716c"
+	Address: "0x1875370731C3BEc2DCe3d14277B81669A9050AB8"
 }]
 
 //Goerli SingleSwapToken
@@ -88,7 +88,7 @@ export const Uniswapv3FactoryBytes = Uniswapv3Factory.bytecode;
 export const uniswapv3Factory:Contract_Network_Info[] = [{
 	Name: "goerli",
 	ChainId: "5",
-	Address: "0x26c7a3B5034534Bb01D599a8323574e76069CC39"
+	Address: "0x20B4dCB801E15Fa01FCC80E752dD4DD322ED3661"
 }];
 
 //https://github.com/Uniswap/v3-periphery/blob/main/contracts/SwapRouter.sol
@@ -97,7 +97,7 @@ export const SwapRouterBytes = SwapRouter.bytecode;
 export const swapRouter:Contract_Network_Info[] = [{
 	Name: "goerli",
 	ChainId: "5",
-	Address: "0x05400e23065A36848C0d5FD94a77ed3Eb99660d6"
+	Address: "0x416aD695204bB066200c79c4B54Df8766a0FbE55"
 }];
 
 //https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/libraries/NFTDescriptor.sol
@@ -106,7 +106,7 @@ export const NFTDescriptorBytes = NFTDescriptor.bytecode;
 export const NFTdescriptor:Contract_Network_Info[] = [{
 	Name: "goerli",
 	ChainId: "5",
-	Address: "0xe60B2e5Cc6c41D7286b642968AbE4da7fD22Fb60"
+	Address: "0x773FF27405f8e94EDe1b21e1271df55D2BBA477d"
 }];
 
 //https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/NonfungibleTokenPositionDescriptor.sol
@@ -115,7 +115,7 @@ export const PositionDescriptorBytes = NonFungibleTokenPositionDescriptor.byteco
 export const PositionDescriptor:Contract_Network_Info[] = [{
 	Name: "goerli",
 	ChainId: "5",
-	Address: "0x91ae842A5Ffd8d12023116943e72A606179294f3"
+	Address: ""
 }];
 //https://github.com/Uniswap/v3-periphery/blob/main/contracts/NonfungiblePositionManager.sol
 export const PositionManagerAbi = NonFungiblePositionManager.abi;
@@ -123,8 +123,13 @@ export const PositionManagerBytes = NonFungiblePositionManager.bytecode;
 export const PositionManager:Contract_Network_Info[] = [{
 	Name: "goerli",
 	ChainId: "5",
-	Address: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+	Address: ""
 }];
 
-
-
+export const UserStorageDataAbi = UserStorageData.abi;
+export const UserStorageDataBytes = UserStorageData.bytecode;
+export const userStorageData:Contract_Network_Info[]=[{
+	Name: "goerli",
+	ChainId: "5",
+	Address: ""
+}]

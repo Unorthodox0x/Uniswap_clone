@@ -58,7 +58,7 @@ export const web3ModalProvider = async ():Promise<ethers.providers.Web3Provider>
 }
 
 export const getNetwork = async():Promise<providers.Network|null> => {
-	const provider:ethers.providers.Web3Provider|null = await defaultProvider();
+	const provider = await defaultProvider();
 	if(!provider) return null;
 	const networkInfo = await provider.getNetwork()
 	return networkInfo;

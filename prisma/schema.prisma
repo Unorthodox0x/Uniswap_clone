@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//==UNISWAP__POOL__FACTORY__CONTRACT==
+//POOL FACTORY EVENT
+//index of all pools created by factory
+model PoolCreated {
+  token0 String
+  token1 String
+  fee Int
+  tickSpacing Int
+  pool Pool @relation
+
+}
+
+//==UNISWAP__POOL__CONTRACT==
+//POOL OBJECT
+//@sqrtPriceX96 The initial sqrt price of the pool
+model Pool {
+    token0 Token @relation(fields:["token0"], references:[id])
+    token1 Token @relation(fields:["token1"], references:[id])
+    fee Int 
+    sqrtPriceX96 String  
+    liquidity String
+    tick Int
+}
+
+//POOL OBJECT
+model Token {
+  chainId Int
+  decimals Int
+  symbol String
+  name String
+  isNative Boolean
+  isToken Boolean
+  String String
+  poolId Int
+}
+
+//POOL OBJECT
+model Immutables {
+  factory String
+  token0 String
+  token1 String
+  fee Int
+  tickSpacing Int
+  maxLiquidityPerTick BigInt
+}
+
+//POOL OBJECT
+model State {
+  liquidity BigInt
+  sqrtPriceX96 BigInt
+  tick Int
+  observationIndex Int
+  observationCardinality Int
+  observationCardinalityNext Int
+  feeProtocol Int
+  unlocked Boolean
+}
+
+//POOL EVENT
+//Emitted exactly once by a pool when #initialize is first called on the pool
+model Initialize {
+  sqrtPriceX96 Int
+  tick Int
+}
+
+//POOL EVENT
+//Emitted when liquidity is minted for a given position
+model Mint {
+  sender String
+  owner String
+  tickLower Int
+  tickUpper Int
+  amount BigInt
+  amount0 BigInt
+  amount1 BigInt
+}
+
+//POOL EVENT
+//Emitted when fees are collected by the owner of a position
+model Collect {
+    owner String
+    tickLower Int
+    tickUpper Int
+    amount0 Int
+    amount1 Int
+}
+
+//POOL EVENT
+//Emitted when a position's liquidity is removed
+model Burn{
+  owner String
+  tickLower Int
+  tickUpper Int
+  amount BigInt
+  amount0 BigInt
+  amount1 BigInt
+}
+
+//POOL EVENT
+//Emitted by the pool for any swaps between token0 and token1
+model Swap{
+  sender String 
+  recipient String 
+  amount0 BigInt 
+  amount1 BigInt 
+  sqrtPriceX96 Int 
+  liquidity Int 
+  tick Int 
+}
+
+//POOL EVENT
+//emitted by the pool for any flashes of token0/token1
+model Flash{
+  sender String 
+  recipient String 
+  amount0 Int 
+  amount1 Int 
+  paid0 Int 
+  paid1 Int 
+}
+
+//POOL EVENT
+//Emitted by the pool for increases to the number of observations that can be stored
+//observationCardinalityNext is not the observation cardinality until an observation is written at the index just before a mint/swap/burn.
+model IncreaseObservationCardinalityNext {
+  observationCardinalityNextOld Int
+  observationCardinalityNextNew Int
+}
+
+//POOL EVENT
+model SetFeeProtocol {
+  feeProtocol0Old Int
+  feeProtocol1Old Int
+  feeProtocol0New Int
+  feeProtocol1New Int
+}
+
+//POOL EVENT
+model CollectProtocol {
+  sender String 
+  recipient String 
+  amount0 BigInt 
+  amount1 BigInt 
+}

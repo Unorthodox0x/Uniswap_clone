@@ -1,4 +1,4 @@
-import { ethers, BigNumber, Contract } from "ethers";
+import { ethers, providers, BigNumber, Contract } from "ethers";
 //Internal
 import { tokenList } from "../Constants/AvailableTokens";
 //Smart Contract
@@ -15,15 +15,15 @@ import { IToken } from "../../Models/index";
  */
 //GET USERS BALANCE OF ALL SUPPORTED TOKENS 
 export const getUserTokenBalance = async(
-	provider: ethers.providers.Web3Provider,
+	provider: providers.Web3Provider,
 	account:string, //Connected Address
-	network:string, //Connected Network Name
+	network:providers.Network, //Connected Network Name
 	tokenData:IToken[]
 ):Promise<void> => {	
 	//GET TOKEN BALANCES
 	tokenList.map(async(el:IToken) => {
 		//Get contract, 
-		const contractAddress = await getContractAddressByNetwork(el.Network, network);
+		const contractAddress = await getContractAddressByNetwork(el.Network, network.name);
 		if(!contractAddress) return;
 		const tokenContract:Contract|null = await connectContractUser(
 			contractAddress, 
@@ -32,7 +32,7 @@ export const getUserTokenBalance = async(
 		if(!tokenContract) return null;;
 
 		//return human readable balance for each token
-		const tokenValue:number = await convertTokenBalance(account, provider, network, tokenContract, el.symbol, el.type);
+		const tokenValue:number = await convertTokenBalance(account, provider, tokenContract, el.symbol, el.type);
 
 		//CREATE LIST TOKENDATA | prevent duplicate add token
 		if(!tokenData.some(el => el.Network[0].Address === contractAddress)){
@@ -42,7 +42,7 @@ export const getUserTokenBalance = async(
 				type: el.type,
 				img: el.img,
 				Network:[{
-					Name: network,
+					Name: network.name,
 					Address: contractAddress,
 				}],
 				balance: tokenValue
@@ -54,13 +54,12 @@ export const getUserTokenBalance = async(
 //CONVERT BALANCE TO READABLE NUMBER
 export const convertTokenBalance = async(
 	account:string, //Connected Address
-	provider:ethers.providers.Web3Provider, 
-	network:string,  //Connected Network Name
+	provider:ethers.providers.Web3Provider,
 	contract:Contract,
 	tokenSymbol:string, //ex. "Eth"
 	tokenType:string //"ERC20"||"IWETH"
 ):Promise<number> => {
-	if(!account || !provider || !network || !contract || !tokenSymbol || !tokenType) {
+	if(!account || !provider || !contract || !tokenSymbol || !tokenType) {
 		console.error('Unable to fetch balance')
 		return 0;
 	}

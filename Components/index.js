@@ -5,8 +5,8 @@ import SearchToken from "./SearchToken/SearchToken";
 import Toggle from "./Toggle/Toggle";
 import SwapSettings from "./SwapSettings/SwapSettings";
 import TokenList from "./TokenList/TokenList";
-import ConnectPool from "./ConnectPool/ConnectPool";
 import CreatePool from "./CreatePool/CreatePool";
+import PoolLiquidity from "./PoolLiquidity/PoolLiquidity";
 
 export {
 	MainSection,
@@ -16,6 +16,6 @@ export {
 	Toggle,
 	SwapSettings,
 	TokenList,
-	ConnectPool,
-	CreatePool
+	CreatePool,
+	PoolLiquidity
 }

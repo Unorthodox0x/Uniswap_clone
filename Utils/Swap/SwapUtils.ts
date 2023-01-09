@@ -27,13 +27,14 @@ import { IToken } from "../../Models/index";
 export const singleSwap = async (tokenX:IToken, tokenY:IToken, swapAmount:number) => {
 	if(tokenX.name==="" || tokenY.name==="" || Number.isNaN(swapAmount)) return null;
 
-	const network:string|null = await getNetwork();
+	//GET USER ACTIVE NETWORK to find token address on that network 
+	const network = await getNetwork();
 	if(!network) return null;
 	
 	//CONFIRM SELECTED TOKEN CONTRACTS EXIST | CAN CONNECT
-	const tokenXAddress:string = await getContractAddressByNetwork(tokenX.Network, network);
-	const tokenYAddress:string = await getContractAddressByNetwork(tokenY.Network, network);
-	const singleSwapAddress:string = await getContractAddressByNetwork(singleSwapToken, network);
+	const tokenXAddress:string = await getContractAddressByNetwork(tokenX.Network, network.name);
+	const tokenYAddress:string = await getContractAddressByNetwork(tokenY.Network, network.name);
+	const singleSwapAddress:string = await getContractAddressByNetwork(singleSwapToken, network.name);
 	
 	//MAKE CONTRACT INSTANCE TO ACCESS FUNCTIONS
 	const tokenXContract:Contract|null = await connectContractUser(tokenXAddress, tokenX.Network[0].Abi);

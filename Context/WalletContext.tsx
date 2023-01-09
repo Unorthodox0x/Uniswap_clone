@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
-import {ethers} from "ethers";
+import {ethers, providers} from "ethers";
 import {
     checkWalletConnected,
     connectwallet,
@@ -7,6 +7,9 @@ import {
 	defaultProvider,
 	web3ModalProvider
 } from "../Utils/Wallet/WalletUtils";
+import {
+	getUserLiquidity,
+} from "../Utils/Liquidity/LiquidityUtils";
 import {
 	getUserTokenBalance,
 	convertTokenBalance
@@ -17,6 +20,7 @@ import {
 
 //@Types
 import { 
+	defaultLiquidity, ILiquidity,
 	defaultToken, IToken, 
 	defaultWalletContext, IWalletContext 
 }  from "../Models/index";
@@ -33,9 +37,10 @@ export const WalletProvider = ({ children }) => {
 	//STATE
 	const [provider, setProvider] = useState<ethers.providers.Web3Provider|null>(null); 
 	const [account, setAccount] = useState<string>(""); //address
-	const [userNetwork, setUserNetwork] = useState<string|null>(""); //name
+	const [userNetwork, setUserNetwork] = useState<providers.Network|null>(null); //name
 	const [tokenData, setTokenData] = useState<IToken[]>([defaultToken]);
-
+	const [liquidityData, setLiquidityData] = useState<ILiquidity[]|null>([defaultLiquidity]);
+	
 	//REQUEST CONNECT WALLET 
 	const connectWallet = async():Promise<void> => {
 		setAccount(await connectwallet());
@@ -62,6 +67,7 @@ export const WalletProvider = ({ children }) => {
 		if(!!account && !!userNetwork && !!provider){
 			// POPULATE UX WITH USER'S TOKEN INFO
 			getUserTokenBalance(provider, account, userNetwork, tokenData);
+			getUserLiquidity(userNetwork, liquidityData);
 		}
 	},[account, userNetwork, provider])
 
@@ -72,6 +78,7 @@ export const WalletProvider = ({ children }) => {
 				userNetwork,
 				tokenData,
 				connectWallet,
+				liquidityData,
 			}}
 		>
 			{children}

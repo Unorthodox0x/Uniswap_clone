@@ -23,8 +23,8 @@ const config: HardhatUserConfig = {
     hardhat: {
       forking:{
         url:`https://eth-goerli.g.alchemy.com/v2/${projectKey}`,
+        // accounts:[],
       },
-      // accounts:[],
       // gas: 2100000, 
       // gasPrice: 8000000000
     },

@@ -1,9 +1,9 @@
 import '../styles/globals.scss'
-import type { AppProps } from 'next/app'
+import type { AppType,  AppProps } from 'next/app'
 import {NavBar} from "../Components/index";
 import {WalletProvider} from "../Context/WalletContext";
 
-const MyApp = ({ Component, pageProps }: AppProps) => (
+const NextApp:AppType = ({ Component, pageProps }: AppProps) => (
   <div>
     <WalletProvider>
         <NavBar />
@@ -12,4 +12,4 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
   </div>
 );
 
-export default MyApp;
+export default NextApp;

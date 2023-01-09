@@ -18,6 +18,7 @@ const WalletModal = ({ setOpenModal, connectWallet }) => {
 	return (
 		<div className={Style.WalletModal}>
 			<div className={Style.box}>
+				
 				<div className={Style.heading}>
 					<p>Connect a wallet</p>
 					<div className={Style.img}>
@@ -30,23 +31,23 @@ const WalletModal = ({ setOpenModal, connectWallet }) => {
 					</div>
 				</div>
 
-			{/* Wallet Menu Options */}
-			<div className={Style.wallet}>
-				{walletMenu.map((el,i)=> (
-					<p 
-						key={i+1} 
-						onClick={()=> connectWallet()}
-					>
-						{el}
-					</p>
-				))}
-			</div>
+				{/* Wallet Menu Options */}
+				<div className={Style.wallet}>
+					{walletMenu.map((el,i)=> (
+						<p 
+							key={i+1} 
+							onClick={()=> connectWallet()}
+						>
+							{el}
+						</p>
+					))}
+				</div>
 			
-			{/* Consent message */}
-			<p className={Style.para} >
-				By connecting a wallet, you agree to Uniswap Labs'
-				Terms of service and consent to its Privacy Policy. 				
-			</p>
+				{/* Consent message */}
+				<p className={Style.para} >
+					By connecting a wallet, you agree to Uniswap Labs'
+					Terms of service and consent to its Privacy Policy. 				
+				</p>
 			
 			</div>
 		</div>

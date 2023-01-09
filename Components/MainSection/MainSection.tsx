@@ -1,7 +1,9 @@
 import React, {useState, useEffect, useContext} from "react";
 import { WalletContext } from "../../Context/WalletContext";
 import { SwapContext } from "../../Context/SwapContext";
+import TokenPopup from "../TokenPopup/TokenPopup"
 import Image from "next/image";
+import Popup from "reactjs-popup";
 
 import Style from "./MainSection.module.scss"
 import images from "../../Assets";
@@ -23,7 +25,7 @@ const MainSection = () => {
 	const [openSetting, setOpenSetting] = useState<boolean>(false);
 	const [openToken, setOpenToken] = useState<boolean>(false);
 	const [openTokenTwo, setOpenTokenTwo] = useState<boolean>(false);
-
+	
 	return (
 		<div className={Style.MainSection}>
 			<div className={Style.box}>
@@ -116,24 +118,25 @@ const MainSection = () => {
 			</div>
 
 			{openSetting && (
-				<SwapSettings
-					setOpenSetting={setOpenSetting}
-				/>
+				<Popup
+		            open={openSetting}
+		            className={Style.Swap_Settings_Popup}
+		            closeOnEscape={true}
+		            onClose={() => setOpenSetting(false)}
+		          >
+					<SwapSettings
+						setOpenSetting={setOpenSetting}
+					/>
+				</Popup>
 			)}
-			{openToken && (
-				<SearchToken
-					setOpenToken={setOpenToken}
-					setToken={setTokenOne}
-					tokenData={tokenData}
-				/>
-			)}
-			{openTokenTwo && (
-				<SearchToken
-					setOpenToken={setOpenTokenTwo}
-					setToken={setTokenTwo}
-					tokenData={tokenData}
-				/>
-			)}
+
+			<TokenPopup 
+				context="SwapContext"
+				openToken={openToken}
+				setOpenToken={setOpenToken}
+				openTokenTwo={openTokenTwo}
+				setOpenTokenTwo={setOpenTokenTwo}
+			/>
 		</div>
 	)
 }

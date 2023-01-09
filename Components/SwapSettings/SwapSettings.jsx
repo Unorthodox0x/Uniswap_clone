@@ -5,7 +5,15 @@ import Style from "./SwapSettings.module.scss";
 import images from "Assets";
 import { Toggle } from "../index";
 
-const SwapSettings = ({ setOpenSetting }) => {
+const SwapSettings = (props ) => {
+	if(!props)return null;
+	const {
+		setOpenSetting,
+		slippage,
+		setSlippage,
+		deadline,
+		setDeadline,
+	} = props;
 
 	return (
 		<div className={Style.SwapSettings}>
@@ -37,22 +45,30 @@ const SwapSettings = ({ setOpenSetting }) => {
 				{/* */}
 				<div className={Style.input}>
 					<button>Auto</button>
-					<input type="text" placeholder="0.10%" />
+					<input 
+						type="text" 
+						placeholder={slippage} 
+						onChange={(e)=> setSlippage(Number(e.target.value))}
+					/>
 				</div>
 
 				<p className={Style.para}>
-					Slippage tolerance
+					Deadline {""}
 					<Image 
-					src={images.Lock}
-					alt="image" 
-					width={20} 
-					height={20}
+						src={images.Lock}
+						alt="image" 
+						width={20} 
+						height={20}
 					/>
 				</p>
 
 				{/* */}
 				<div className={Style.input}>
-					<input type="text" placeholder="30" />
+					<input 
+						type="text" 
+						placeholder={deadline}
+						onChange={(e)=> setDeadline(Number(e.target.value))}
+					/>
 					<button>minutes</button>
 				</div>
 
